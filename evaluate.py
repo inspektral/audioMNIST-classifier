@@ -19,7 +19,7 @@ def evaluate(model, test_loader, device):
     correct = 0
     total = 0
     with torch.no_grad():
-        for inputs, labels in test_loader:
+        for inputs, labels, _, _ in test_loader:
             inputs = inputs.unsqueeze(1)
             inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)

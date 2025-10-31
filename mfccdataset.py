@@ -33,6 +33,9 @@ class MFCCDataset(Dataset):
     def __len__(self):
         return len(self.annotations)
     
+    def get_annotation(self, idx):
+        return self.annotations[idx]
+
     def __getitem__(self, idx):
         file_path, label, speaker = self.annotations[idx]
         
