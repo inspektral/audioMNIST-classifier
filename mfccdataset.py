@@ -4,14 +4,16 @@ import torchaudio
 
 from torch.utils.data import Dataset
 
+import utils
+
 class MFCCDataset(Dataset):
 
-    def __init__(self, data_dir, sr=16000, n_mfcc = 20, max_len = 1.0):
+    def __init__(self, data_dir, sr=16000, n_mfcc = 20, max_len = 1.0, with_labels=True):
         self.data_dir = data_dir
         self.sr = sr
         self.n_mfcc = n_mfcc
         self.max_len = max_len
-        self.max_samples = int(self.sr*self.max_len)
+        self.with_labels = with_labels
 
         self.annotations = []
         self._load_annotations()
@@ -21,32 +23,28 @@ class MFCCDataset(Dataset):
             for file in files:
                 if file.endswith('.wav'):
                     file_path = os.path.join(root, file)
-                    label = int(file.split('_')[0])
-                    self.annotations.append((file_path, label))
+                    if self.with_labels:
+                        label = int(file.split('_')[0])
+                        spkr = int(file.split('_')[1])
+                        self.annotations.append((file_path, label, spkr))
+                    else:
+                        self.annotations.append((file_path, None, None))
 
     def __len__(self):
         return len(self.annotations)
     
     def __getitem__(self, idx):
-        file_path, label = self.annotations[idx]
-        waveform, sample_rate = torchaudio.load(file_path)
+        file_path, label, speaker = self.annotations[idx]
+        
+        mfcc = utils.load_mfcc(file_path, self.sr, self.n_mfcc, self.max_len)
+        if self.with_labels:
+            label = torch.tensor(label, dtype=torch.long)
+            speaker = torch.tensor(speaker, dtype=torch.long)
+        else:
+            label = torch.tensor(-1, dtype=torch.long)
+            speaker = torch.tensor(-1, dtype=torch.long)
 
-        if sample_rate != self.sr:
-            resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=self.sr)
-            waveform = resampler(waveform)
-
-        samples = waveform.shape[1] 
-        if samples > self.max_samples:
-            waveform = waveform[:, :self.max_samples]
-        elif samples < self.sr*self.max_samples:
-            padding = self.max_samples - samples
-            waveform = torch.nn.functional.pad(waveform, (0, padding))
-
-        mfcc_transform = torchaudio.transforms.MFCC(sample_rate=self.sr, n_mfcc=self.n_mfcc)
-        mfcc = mfcc_transform(waveform).squeeze(0)
-
-        label = torch.tensor(label, dtype=torch.long)
-        return mfcc, label
+        return mfcc, label, speaker, file_path
     
 if __name__ == "__main__":
     dataset = MFCCDataset(data_dir='data')
