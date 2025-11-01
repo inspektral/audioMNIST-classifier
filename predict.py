@@ -14,12 +14,13 @@ def main():
         device = torch.device('cpu')
 
     model = ConvNet(10).to(device)
-    model.load_state_dict(torch.load('audio_mnist_cnn.pth'))
+    model.load_state_dict(torch.load('audio_mnist_cnn_speakers.pth'))
     
     data = utils.predict_dataloader(PATH)
 
     predictions = predict(model, data, device)
     df = pd.DataFrame(predictions, columns=['filepath', 'predicted_label'])
+    print(df)
     df.to_csv(RESULTS_PATH, index=False)
 
 

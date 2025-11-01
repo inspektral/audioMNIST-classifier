@@ -4,8 +4,7 @@ import torchaudio
 from mfccdataset import MFCCDataset
 from torch.utils.data import DataLoader, random_split
 
-SEED = 42
-
+from config import SEED
 
 def load_mfcc(audio_path:str, sr:int=16000, n_mfcc:int=20, max_len:float=1.0):
     waveform, sample_rate = torchaudio.load(audio_path)
@@ -26,6 +25,7 @@ def load_mfcc(audio_path:str, sr:int=16000, n_mfcc:int=20, max_len:float=1.0):
     mfcc = mfcc_transform(waveform).squeeze(0)
 
     return mfcc
+
 
 def train_test_dataloaders(data_path:str='data'):
     full_dataset = MFCCDataset(data_dir=data_path)

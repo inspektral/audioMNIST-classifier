@@ -1,8 +1,10 @@
 import torch.nn as nn
 import torch.nn.functional as F
 
+from config import NUM_CLASSES
+
 class ConvNet(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=NUM_CLASSES):
         super(ConvNet, self).__init__()
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=4, kernel_size=3, stride=1, padding=1)
         self.bn1 = nn.BatchNorm2d(4)

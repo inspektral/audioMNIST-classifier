@@ -4,7 +4,9 @@ import utils
 from models.model import ConvNet
 from evaluate import evaluate
 
-NUM_EPOCHS = 5
+import pandas as pd
+
+from config import NUM_EPOCHS, LOG_TRAINING, NUM_CLASSES
 
 def main():
     if torch.cuda.is_available():
@@ -12,16 +14,40 @@ def main():
     else:
         device = torch.device('cpu')
 
+
     train_data, test_data = utils.train_test_dataloaders_by_speaker(data_path='data')
 
-    model = ConvNet(10).to(device)
+    model = ConvNet(NUM_CLASSES).to(device)
+
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
+    logs = []
 
     for epoch in range(NUM_EPOCHS):
         print(f"Epoch {epoch+1}/{NUM_EPOCHS}")
         train(model, train_data, criterion, optimizer, device)
-        evaluate(model, test_data, device)
+
+        if LOG_TRAINING:
+            train_accuracy, train_loss = evaluate(model, train_data, device)
+            test_accuracy, test_loss = evaluate(model, test_data, device)
+
+            logs.append({
+                'epoch': epoch + 1,
+                'train_accuracy': train_accuracy,
+                'train_loss': train_loss,
+                'test_accuracy': test_accuracy,
+                'test_loss': test_loss
+            })
+
+            print(f"Train Accuracy: {train_accuracy:.2f}%, Train Loss: {train_loss:.4f}")
+            print(f"Test Accuracy: {test_accuracy:.2f}%, Test Loss: {test_loss:.4f}")
+
+    if LOG_TRAINING:
+        df = pd.DataFrame(logs)
+        df.to_csv('training_log.csv', index=False)
+
+
 
     torch.save(model.state_dict(), 'audio_mnist_cnn_speakers.pth')
 

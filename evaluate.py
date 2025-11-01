@@ -18,18 +18,27 @@ def evaluate(model, test_loader, device):
     model.eval()
     correct = 0
     total = 0
+    total_loss = 0.0
+    criterion = torch.nn.CrossEntropyLoss()
+    
     with torch.no_grad():
         for inputs, labels, _, _ in test_loader:
             inputs = inputs.unsqueeze(1)
             inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)
+            
+            loss = criterion(outputs, labels)
             _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
+            batch_size = labels.size(0)
+            total += batch_size
             correct += (predicted == labels).sum().item()
             
-    accuracy = 100 * correct / total
-    print(f'Test Accuracy: {accuracy:.2f}%')
-    return accuracy
+            total_loss += loss.item() * batch_size
+
+    accuracy = 100 * correct / total if total > 0 else 0.0
+    avg_loss = total_loss / total if total > 0 else 0.0
+
+    return accuracy, avg_loss
 
 if __name__ == "__main__":
     main()
