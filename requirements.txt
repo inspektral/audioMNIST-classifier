@@ -2,3 +2,5 @@ torch
 torchaudio
 pandas
 numpy
+matplotlib
+tqdm

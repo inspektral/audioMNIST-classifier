@@ -38,6 +38,7 @@ def evaluate(model, test_loader, device):
             loss = criterion(outputs, labels)
             _, predicted = torch.max(outputs.data, 1)
             batch_size = labels.size(0)
+
             total += batch_size
             correct += (predicted == labels).sum().item()
             
