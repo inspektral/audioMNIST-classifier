@@ -34,7 +34,7 @@ def predict(model, data_loader, device):
             outputs = model(inputs)
             _, predicted = torch.max(outputs.data, 1)
             
-            predictions.append((filepath, predicted.item()))
+            predictions.append((filepath[0], predicted.item()))
     return predictions
 
 if __name__ == "__main__":
