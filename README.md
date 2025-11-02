@@ -43,12 +43,9 @@ python predict.py
 - The dataset is split by speaker by default (see `utils.train_test_dataloaders_by_speaker`) so test speakers are unseen during training.
 - MFCC extraction and fixed-length padding are handled in `mfccdataset.py` (1s clips, 16 kHz, 20 MFCCs by default).
 
-## Results and artifacts
+## Results
 - Trained weights (examples): `audio_mnist_cnn_speakers.pth`
 - Logs: `training_log.csv` — per-epoch loss and accuracy for train/test
-- Predictions: `predictions.csv`
 
 ## License
 MIT — see `LICENSE`.
-
-If you'd like, I can add a short example showing how to load the model and run a single file prediction from Python code.
