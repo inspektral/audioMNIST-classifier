@@ -2,6 +2,8 @@
 
 Small CNN classifier for the AudioMNIST dataset. The repository converts audio to MFCCs and trains a compact convolutional network to classify spoken digits (0–9).
 
+See colab notebook: https://colab.research.google.com/github/inspektral/audioMNIST-classifier/blob/main/report.ipynb
+
 ## Contents
 - `train.py` — training script (uses `utils` for dataloaders)
 - `evaluate.py` — evaluate a saved model on the test set

@@ -15,7 +15,7 @@ def main():
         device = torch.device('cpu')
 
     model = ConvNet(10).to(device)
-    model.load_state_dict(torch.load(MODEL_WEIGHTS))
+    model.load_state_dict(torch.load(MODEL_WEIGHTS, map_location=device))
     
     data = utils.predict_dataloader(DATA_PATH)
 

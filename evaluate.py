@@ -15,7 +15,7 @@ def main():
 
     train_data, test_data = utils.train_test_dataloaders_by_speaker(data_path='data')
     model = ConvNet(NUM_CLASSES).to(device)
-    model.load_state_dict(torch.load(MODEL_WEIGHTS))
+    model.load_state_dict(torch.load(MODEL_WEIGHTS, map_location=device))
     accuracy, loss = evaluate(model, test_data, device)
 
     print(f"Test Accuracy: {accuracy:.2f}%, Test Loss: {loss:.4f}")
