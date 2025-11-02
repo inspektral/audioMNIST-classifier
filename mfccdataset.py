@@ -8,10 +8,11 @@ import utils
 
 class MFCCDataset(Dataset):
 
-    def __init__(self, data_dir, sr=16000, n_mfcc = 20, max_len = 1.0, with_labels=True):
+    def __init__(self, data_dir, sr=16000, n_mfcc = 20, n_mels=128, max_len = 1.0, with_labels=True):
         self.data_dir = data_dir
         self.sr = sr
         self.n_mfcc = n_mfcc
+        self.n_mels = n_mels
         self.max_len = max_len
         self.with_labels = with_labels
 
@@ -38,8 +39,8 @@ class MFCCDataset(Dataset):
 
     def __getitem__(self, idx):
         file_path, label, speaker = self.annotations[idx]
-        
-        mfcc = utils.load_mfcc(file_path, self.sr, self.n_mfcc, self.max_len)
+
+        mfcc = utils.load_mfcc(file_path, self.sr, self.n_mfcc, self.n_mels, self.max_len)
         if self.with_labels:
             label = torch.tensor(label, dtype=torch.long)
             speaker = torch.tensor(speaker, dtype=torch.long)

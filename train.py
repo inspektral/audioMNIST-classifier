@@ -5,8 +5,10 @@ from models.model import ConvNet
 from evaluate import evaluate
 
 import pandas as pd
+import tqdm
 
-from config import NUM_EPOCHS, LOG_TRAINING, NUM_CLASSES
+from config import NUM_EPOCHS, LOG_TRAINING, NUM_CLASSES, MODEL_WEIGHTS
+
 
 def main():
     if torch.cuda.is_available():
@@ -24,6 +26,12 @@ def main():
 
     logs = []
 
+    if LOG_TRAINING:
+        train_accuracy, train_loss = evaluate(model, train_data, device)
+        test_accuracy, test_loss = evaluate(model, test_data, device)
+
+        utils.add_log_entry(logs, 0, train_accuracy, train_loss, test_accuracy, test_loss)
+
     for epoch in range(NUM_EPOCHS):
         print(f"Epoch {epoch+1}/{NUM_EPOCHS}")
         train(model, train_data, criterion, optimizer, device)
@@ -32,29 +40,20 @@ def main():
             train_accuracy, train_loss = evaluate(model, train_data, device)
             test_accuracy, test_loss = evaluate(model, test_data, device)
 
-            logs.append({
-                'epoch': epoch + 1,
-                'train_accuracy': train_accuracy,
-                'train_loss': train_loss,
-                'test_accuracy': test_accuracy,
-                'test_loss': test_loss
-            })
-
-            print(f"Train Accuracy: {train_accuracy:.2f}%, Train Loss: {train_loss:.4f}")
-            print(f"Test Accuracy: {test_accuracy:.2f}%, Test Loss: {test_loss:.4f}")
+            utils.add_log_entry(logs, epoch+1, train_accuracy, train_loss, test_accuracy, test_loss)
 
     if LOG_TRAINING:
         df = pd.DataFrame(logs)
         df.to_csv('training_log.csv', index=False)
 
+    torch.save(model.state_dict(), MODEL_WEIGHTS)
+    print(f"Model saved to {MODEL_WEIGHTS}")
 
-
-    torch.save(model.state_dict(), 'audio_mnist_cnn_speakers.pth')
 
 def train(model, train_data, criterion, optimizer, device):
     model.train()
-    i = 0
-    for inputs, labels, _, _ in train_data:
+
+    for inputs, labels, _, _ in tqdm.tqdm(train_data):
         inputs = inputs.unsqueeze(1)
         
         inputs, labels = inputs.to(device), labels.to(device)
@@ -65,10 +64,7 @@ def train(model, train_data, criterion, optimizer, device):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        
-        i+=1
-        print(f'{i}/{len(train_data)}')
-        print(f"Current loss: {loss.item():.4f}")
+
 
 if __name__ == "__main__":
     main()
