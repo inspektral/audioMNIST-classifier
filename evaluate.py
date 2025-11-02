@@ -5,6 +5,8 @@ import tqdm
 
 import utils
 
+from config import MODEL_WEIGHTS, NUM_CLASSES
+
 def main():
     if torch.cuda.is_available():
         device = torch.device('cuda')
@@ -12,8 +14,8 @@ def main():
         device = torch.device('cpu')
 
     train_data, test_data = utils.train_test_dataloaders_by_speaker(data_path='data')
-    model = ConvNet(10).to(device)
-    model.load_state_dict(torch.load('audio_mnist_cnn_speakers.pth'))
+    model = ConvNet(NUM_CLASSES).to(device)
+    model.load_state_dict(torch.load(MODEL_WEIGHTS))
     accuracy, loss = evaluate(model, test_data, device)
 
     print(f"Test Accuracy: {accuracy:.2f}%, Test Loss: {loss:.4f}")

@@ -13,7 +13,7 @@ class ConvNet(nn.Module):
         self.conv2 = nn.Conv2d(in_channels=4, out_channels=8, kernel_size=3, stride=1, padding=1)
         self.bn2 = nn.BatchNorm2d(8)
         self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
-        
+
         self.conv3 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=3, stride=1, padding=1)
         self.bn3 = nn.BatchNorm2d(16)
         self.pool3 = nn.MaxPool2d(kernel_size=2, stride=2)

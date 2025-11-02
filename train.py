@@ -7,7 +7,7 @@ from evaluate import evaluate
 import pandas as pd
 import tqdm
 
-from config import NUM_EPOCHS, LOG_TRAINING, NUM_CLASSES, MODEL_WEIGHTS
+from config import NUM_EPOCHS, LOG_TRAINING, NUM_CLASSES, MODEL_WEIGHTS, LEARNING_RATE
 
 
 def main():
@@ -22,7 +22,7 @@ def main():
     model = ConvNet(NUM_CLASSES).to(device)
 
     criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     logs = []
 

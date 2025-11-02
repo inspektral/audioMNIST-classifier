@@ -4,7 +4,7 @@ import torchaudio
 from mfccdataset import MFCCDataset
 from torch.utils.data import DataLoader, random_split
 
-from config import SEED, N_MFCC, N_MELS
+from config import SEED, N_MFCC, N_MELS, BATCH_SIZE
 
 def load_mfcc(audio_path:str, sr:int=16000, n_mfcc:int=20, n_mels:int=128, max_len:float=1.0):
     waveform, sample_rate = torchaudio.load(audio_path)
@@ -34,8 +34,8 @@ def train_test_dataloaders(data_path:str='data'):
 
     train_dataset, test_dataset = random_split(full_dataset, [train_size, test_size])
 
-    train_data_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    test_data_loader = DataLoader(test_dataset, batch_size=32)
+    train_data_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+    test_data_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE)
 
     return train_data_loader, test_data_loader
 
@@ -62,8 +62,8 @@ def train_test_dataloaders_by_speaker(data_path:str='data'):
     train_subset = torch.utils.data.Subset(full_dataset, train_indices)
     test_subset = torch.utils.data.Subset(full_dataset, test_indices)
 
-    train_data_loader = DataLoader(train_subset, batch_size=32, shuffle=True)
-    test_data_loader = DataLoader(test_subset, batch_size=32)
+    train_data_loader = DataLoader(train_subset, batch_size=BATCH_SIZE, shuffle=True)
+    test_data_loader = DataLoader(test_subset, batch_size=BATCH_SIZE)
 
     return train_data_loader, test_data_loader
 
