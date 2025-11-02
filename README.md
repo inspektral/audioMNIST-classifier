@@ -15,12 +15,10 @@ Small CNN classifier for the AudioMNIST dataset. The repository converts audio t
 
 ## Quick start
 
-1. Install dependencies (pick the correct PyTorch wheel for your CUDA/drivers):
+1. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
-# Example (CPU-only PyTorch):
-# pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
 ```
 
 2. Train the model:
@@ -44,11 +42,9 @@ python predict.py
 ## Notes and tips
 - The dataset is split by speaker by default (see `utils.train_test_dataloaders_by_speaker`) so test speakers are unseen during training.
 - MFCC extraction and fixed-length padding are handled in `mfccdataset.py` (1s clips, 16 kHz, 20 MFCCs by default).
-- If you use GPU, ensure PyTorch is installed with the matching CUDA version. When loading weights on a different device use `torch.load(..., map_location=device)`.
-- To speed up data loading on Linux, enable `pin_memory=True` and set `num_workers>0` in the DataLoader (edit `utils.py`).
 
 ## Results and artifacts
-- Trained weights (examples): `audio_mnist_cnn.pth`, `audio_mnist_cnn_speakers.pth`
+- Trained weights (examples): `audio_mnist_cnn_speakers.pth`
 - Logs: `training_log.csv` — per-epoch loss and accuracy for train/test
 - Predictions: `predictions.csv`
 
