@@ -5,7 +5,7 @@ import tqdm
 
 import utils
 
-from config import MODEL_WEIGHTS, NUM_CLASSES
+from config import MODEL_WEIGHTS, NUM_CLASSES, DATASET_PATH
 
 def main():
     if torch.cuda.is_available():
@@ -13,7 +13,7 @@ def main():
     else:
         device = torch.device('cpu')
 
-    train_data, test_data = utils.train_test_dataloaders_by_speaker(data_path='data')
+    train_data, test_data = utils.train_test_dataloaders_by_speaker(data_path=DATASET_PATH)
     model = ConvNet(NUM_CLASSES).to(device)
     model.load_state_dict(torch.load(MODEL_WEIGHTS, map_location=device))
     accuracy, loss = evaluate(model, test_data, device)

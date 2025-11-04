@@ -7,7 +7,7 @@ from evaluate import evaluate
 import pandas as pd
 import tqdm
 
-from config import NUM_EPOCHS, LOG_TRAINING, NUM_CLASSES, MODEL_WEIGHTS, LEARNING_RATE
+from config import NUM_EPOCHS, LOG_TRAINING, NUM_CLASSES, MODEL_WEIGHTS, LEARNING_RATE, DATASET_PATH
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
         device = torch.device('cpu')
 
 
-    train_data, test_data = utils.train_test_dataloaders_by_speaker(data_path='data')
+    train_data, test_data = utils.train_test_dataloaders_by_speaker(data_path=DATASET_PATH)
 
     model = ConvNet(NUM_CLASSES).to(device)
 

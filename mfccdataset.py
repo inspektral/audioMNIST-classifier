@@ -6,6 +6,8 @@ from torch.utils.data import Dataset
 
 import utils
 
+from config import DATASET_PATH
+
 class MFCCDataset(Dataset):
 
     def __init__(self, data_dir, sr=16000, n_mfcc = 20, n_mels=128, max_len = 1.0, with_labels=True):
@@ -51,8 +53,8 @@ class MFCCDataset(Dataset):
         return mfcc, label, speaker, file_path
     
 if __name__ == "__main__":
-    dataset = MFCCDataset(data_dir='data')
+    dataset = MFCCDataset(data_dir=DATASET_PATH)
     print(f"Dataset size: {len(dataset)}")
-    mfcc, label = dataset[0]
-    print(f"MFCC shape: {mfcc.shape}, Label: {label}")
+    mfcc, label, speaker, file_path = dataset[0]
+    print(f"MFCC shape: {mfcc.shape}, Label: {label}, Speaker: {speaker}, File path: {file_path}")
 
