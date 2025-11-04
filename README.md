@@ -14,28 +14,36 @@ See colab notebook: https://colab.research.google.com/github/inspektral/audioMNI
 - `config.py` — simple config (seed, epochs, etc.)
 - `requirements.txt` — project dependencies
 - `report.ipynb` — short notebook with plots and examples
+- `download-dataset.sh` — script to download the AudioMNIST dataset
 
 ## Quick start
 
 1. Install dependencies:
 
+
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Train the model:
+2. Download the AudioMNIST dataset:
+
+```bash
+./download-dataset.sh
+```
+
+3. Train the model:
 
 ```bash
 python train.py
 ```
 
-3. Evaluate a saved model:
+4. Evaluate a saved model:
 
 ```bash
 python evaluate.py
 ```
 
-4. Predict on new audio placed in `predict_data/`:
+5. Predict on new audio placed in `predict_data/`:
 
 ```bash
 python predict.py

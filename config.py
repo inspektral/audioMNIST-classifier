@@ -1,4 +1,5 @@
 SEED = 42
+DATASET_PATH = 'data'
 
 NUM_CLASSES = 10
 
